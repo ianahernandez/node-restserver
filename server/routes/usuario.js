@@ -19,11 +19,9 @@ app.get('/usuario', function(req, res) {
 
     let limite = req.query.limite || 5;
 
-    let estado = req.query.estado;
-
     limite = Number(limite);
 
-    Usuario.find({ estado }, 'nombre email rol estado')
+    Usuario.find({ estado: true }, 'nombre email rol estado')
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
