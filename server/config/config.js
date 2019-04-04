@@ -26,3 +26,22 @@ process.env.URLDB = urlDB;
 
 
 // MONGO_URI='mongodb+srv://ianahernandez:EPnOKdyrT8NjeWba@cluster0-kheys.mongodb.net/cafe' en heroku
+
+
+//================================
+//    Vencimiento del Token
+//================================
+//60 segundos
+//60 minutos
+//24 horas 
+
+process.env.CADUCIDAD_TOKEN = 60 * 60 * 24 * 30;
+
+
+
+
+//================================
+//     Seed de autenticación
+//================================
+
+process.env.SEED = process.env.SEED || 'secret-dev'
