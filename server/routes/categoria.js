@@ -1,15 +1,17 @@
 const express = require('express');
 
-let { verificarToken, verificarAdminRole } = require('../middlewares/autenticacion');
+const { verificarToken, verificarAdminRole } = require('../middlewares/autenticacion');
 
-let app = express();
+const app = express();
+
+const _ = require('underscore');
 
 const Categoria = require('../models/categoria');
 
 // ========================================
 //      MOSTRAR TODAS LAS CATEGORIAS 
 // ========================================
-app.get('/categoria', (req, res) => {
+app.get('/categoria', verificarToken, (req, res) => {
 
     Categoria.find({})
         .exec((err, categorias) => {
@@ -29,8 +31,9 @@ app.get('/categoria', (req, res) => {
 // ========================================
 //     MOSTRAR UNA CATEGORIA POR ID
 // ========================================
-app.get('/categoria/:id', (req, res) => {
+app.get('/categoria/:id', verificarToken, (req, res) => {
 
+    let id = req.params.id
     Categoria.findById(id, (err, categoria) => {
         if (err) {
             return res.status(400).json({
@@ -49,14 +52,51 @@ app.get('/categoria/:id', (req, res) => {
 // ========================================
 //         CREAR NUEVA CATEGORIA
 // ========================================
-app.post('/categoria', verificarToken, (req, res) => {
+app.post('/categoria', [verificarToken, verificarAdminRole], (req, res) => {
 
+    let body = req.body;
+    let usuario = req.usuario;
+
+    console.log(usuario);
+
+    let categoria = new Categoria({
+        descripcion: body.descripcion,
+        usuario: usuario._id
+    });
+
+    categoria.save((err, categoriadb) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+        res.json({
+            ok: true,
+            categoriadb
+        });
+    });
 });
 
 // ========================================
 //         ACTUALIZAR CATEGORIA
 // ========================================
-app.put('/categoria/:id', verificarToken, (req, res) => {
+app.put('/categoria/:id', [verificarToken, verificarAdminRole], (req, res) => {
+    let body = req.body;
+    let id = req.params.id;
+    Categoria.findByIdAndUpdate(id, body, { new: true, runValidators: true, context: 'query' }, (err, categoriadb) => {
+
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+        res.json({
+            ok: true,
+            categoria: categoriadb
+        });
+    });
 
 });
 
@@ -67,3 +107,5 @@ app.put('/categoria/:id', verificarToken, (req, res) => {
 app.delete('/categoria/:id', (req, res) => {
 
 });
+
+module.exports = app;
