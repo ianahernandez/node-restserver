@@ -97,9 +97,6 @@ app.put('/usuario/:id', [verificarToken, verificarAdminRole], function(req, res)
         });
     })
 
-    // res.json({
-    //     id
-    // })
 });
 //delete
 app.delete('/usuario/:id', [verificarToken, verificarAdminRole], function(req, res) {

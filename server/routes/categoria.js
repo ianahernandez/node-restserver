@@ -71,6 +71,14 @@ app.post('/categoria', [verificarToken, verificarAdminRole], (req, res) => {
                 err
             });
         }
+        if (!categoriadb) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: "Categoria no encontrada"
+                }
+            })
+        }
         res.json({
             ok: true,
             categoriadb
@@ -92,6 +100,7 @@ app.put('/categoria/:id', [verificarToken, verificarAdminRole], (req, res) => {
                 err
             });
         }
+
         res.json({
             ok: true,
             categoria: categoriadb
@@ -106,6 +115,29 @@ app.put('/categoria/:id', [verificarToken, verificarAdminRole], (req, res) => {
 // Solo un admin puede eliminar la categoria (Eliminacion fisica)
 app.delete('/categoria/:id', (req, res) => {
 
+    let id = req.params.id;
+    Categoria.findByIdAndRemove(id, (err, categoriadb) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+
+        if (!categoriadb) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: "Categoria no encontrada"
+                }
+            })
+        }
+
+        res.json({
+            ok: true,
+            categoria: categoriadb
+        });
+    })
 });
 
 module.exports = app;
