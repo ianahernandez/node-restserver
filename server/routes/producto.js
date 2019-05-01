@@ -117,8 +117,32 @@ app.put('/producto/id', verificarToken, (req, res) => {
 // ========================================
 //      BORRAR UN PRODUCTO
 // ========================================
-app.delete('/producto/id', verificarToken, (req, res) => {
+app.delete('/producto/:id', verificarToken, (req, res) => {
     //disponible : false
+    let id = req.params.id;
+    let disponibleFalse = {
+        disponible: false
+    }
+    Producto.findByIdAndUpdate(id, disponibleFalse, { new: true }, (err, producto) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+        if (!producto) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: "El producto que desea eliminar no esta disponible"
+                }
+            });
+        }
+        res.json({
+            ok: true,
+            producto
+        })
+    })
 });
 
 
