@@ -9,16 +9,41 @@ const Producto = require('../models/producto');
 // ========================================
 //      MOSTRAR TODOS LOS PRODUCTOS
 // ========================================
-app.get('/producto', (req, res) => {
+app.get('/producto', verificarToken, (req, res) => {
     //Trae todos los productos
     //Paginados
     //Populate categoria y usuario
+    Producto.find({})
+        .populate('categoria', 'descripcion')
+        .populate('usuario', 'nombre email')
+        .skip(3)
+        .limit(3)
+        .exec((err, productos) => {
+
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+            if (!productos) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+            res.json({
+                ok: true,
+                productos
+            })
+
+        });
 });
 
 // ========================================
 //      MOSTRAR UN PRODUCTO POR ID
 // ========================================
-app.get('/producto/:id', (req, res) => {
+app.get('/producto/:id', verificarToken, (req, res) => {
     //Populate categoria y usuario
 
 });
@@ -36,7 +61,7 @@ app.post('/producto', verificarToken, (req, res) => {
         descripcion: body.descripcion,
         disponible: true,
         categoria: body.categoria,
-        usuario: req.usuario.id
+        usuario: req.usuario._id
     });
 
     producto.save((err, productodb) => {
@@ -63,7 +88,7 @@ app.post('/producto', verificarToken, (req, res) => {
 // ========================================
 //      ACTUALIZAR UN PRODUCTO
 // ========================================
-app.put('/producto/id', (req, res) => {
+app.put('/producto/id', verificarToken, (req, res) => {
     //grabar el usuario
     //grabar una categoria del listado
 });
@@ -71,7 +96,7 @@ app.put('/producto/id', (req, res) => {
 // ========================================
 //      BORRAR UN PRODUCTO
 // ========================================
-app.delete('/producto/id', (req, res) => {
+app.delete('/producto/id', verificarToken, (req, res) => {
     //disponible : false
 });
 
