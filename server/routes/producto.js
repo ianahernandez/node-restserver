@@ -63,7 +63,7 @@ app.get('/producto/:id', verificarToken, (req, res) => {
                     err
                 });
             }
-            res.json({
+            res.status(201).json({
                 ok: true,
                 producto
             });
@@ -171,7 +171,38 @@ app.delete('/producto/:id', verificarToken, (req, res) => {
         });
     })
 });
+// ========================================
+//      BUSCAR PRODUCTOS POR NOMBRE
+// ========================================
+app.get('/producto/buscar/:termino', verificarToken, (req, res) => {
 
+    let termino = req.params.termino;
+    //Expresion regular basada en el termino
+    // i: hace que sea accesible a las mayusculas y minusculas
+    let regex = new RegExp(termino, 'i');
+    Producto.find({ nombre: regex })
+        .populate('categoria', 'descripcion')
+        .exec((err, productos) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+            if (!productos) {
+                return res.status(400).json({
+                    ok: false,
+                    err: {
+                        message: `No se han encontrado resultados para ${termino} `
+                    }
+                });
+            }
+            res.json({
+                ok: true,
+                productos
+            })
+        });
+})
 
 
 module.exports = app;
