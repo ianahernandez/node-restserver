@@ -9,7 +9,7 @@ var productoSchema = new Schema({
     },
     precioUni: {
         type: Number,
-        required: [true, 'El precio únitario es requerido']
+        required: [true, 'El precio unitario es requerido']
     },
     descripcion: {
         type: String,
