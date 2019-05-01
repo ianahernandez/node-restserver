@@ -45,6 +45,27 @@ app.get('/producto', verificarToken, (req, res) => {
 // ========================================
 app.get('/producto/:id', verificarToken, (req, res) => {
     //Populate categoria y usuario
+    let id = req.params.id;
+
+    Producto.findById(id)
+        .exec((err, producto) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    err
+                });
+            }
+            if (!producto) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+            res.json({
+                ok: true,
+                producto
+            });
+        })
 
 });
 
