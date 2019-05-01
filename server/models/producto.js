@@ -5,11 +5,11 @@ var Schema = mongoose.Schema;
 var productoSchema = new Schema({
     nombre: {
         type: String,
-        required: [true, 'El nombre es necesario']
+        required: [true, 'El nombre es requerido']
     },
     precioUni: {
         type: Number,
-        required: [true, 'El precio únitario es necesario']
+        required: [true, 'El precio únitario es requerido']
     },
     descripcion: {
         type: String,
