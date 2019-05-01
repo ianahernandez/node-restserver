@@ -16,7 +16,7 @@ app.get('/categoria', verificarToken, (req, res) => {
     Categoria.find({})
         .exec((err, categorias) => {
             if (err) {
-                return res.status(400).json({
+                return res.status(500).json({
                     ok: false,
                     err
                 });
@@ -36,7 +36,7 @@ app.get('/categoria/:id', verificarToken, (req, res) => {
     let id = req.params.id
     Categoria.findById(id, (err, categoria) => {
         if (err) {
-            return res.status(400).json({
+            return res.status(500).json({
                 ok: false,
                 err
             });
@@ -66,7 +66,7 @@ app.post('/categoria', [verificarToken, verificarAdminRole], (req, res) => {
 
     categoria.save((err, categoriadb) => {
         if (err) {
-            return res.status(400).json({
+            return res.status(500).json({
                 ok: false,
                 err
             });
@@ -74,9 +74,7 @@ app.post('/categoria', [verificarToken, verificarAdminRole], (req, res) => {
         if (!categoriadb) {
             return res.status(400).json({
                 ok: false,
-                err: {
-                    message: "Categoria no encontrada"
-                }
+                err
             })
         }
         res.json({
@@ -118,7 +116,7 @@ app.delete('/categoria/:id', (req, res) => {
     let id = req.params.id;
     Categoria.findByIdAndRemove(id, (err, categoriadb) => {
         if (err) {
-            return res.status(400).json({
+            return res.status(500).json({
                 ok: false,
                 err
             });
