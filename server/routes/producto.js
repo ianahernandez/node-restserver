@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+const _ = require('underscore');
+
 const { verificarToken } = require('../middlewares/autenticacion');
 
 const Producto = require('../models/producto');
@@ -109,9 +111,34 @@ app.post('/producto', verificarToken, (req, res) => {
 // ========================================
 //      ACTUALIZAR UN PRODUCTO
 // ========================================
-app.put('/producto/id', verificarToken, (req, res) => {
+app.put('/producto/:id', verificarToken, (req, res) => {
     //grabar el usuario
     //grabar una categoria del listado
+    let id = req.params.id;
+    let body = _.pick(req.body, ['nombre', 'precioUni', 'descripcion', 'categoria']);
+    body.usuario = req.usuario;
+
+    Producto.findByIdAndUpdate(id, body, { new: true, runValidators: true, context: 'query' }, (err, productodb) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                err
+            });
+        }
+        if (!productodb) {
+            return res.status(400).json({
+                ok: false,
+                err: {
+                    message: "El producto no esta disponible"
+                }
+            });
+        }
+        res.json({
+            ok: true,
+            producto: productodb
+        });
+    })
+
 });
 
 // ========================================
@@ -141,7 +168,7 @@ app.delete('/producto/:id', verificarToken, (req, res) => {
         res.json({
             ok: true,
             producto
-        })
+        });
     })
 });
 
