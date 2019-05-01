@@ -67,7 +67,7 @@ app.get('/producto/:id', verificarToken, (req, res) => {
                 ok: true,
                 producto
             });
-        })
+        });
 
 });
 
@@ -137,7 +137,7 @@ app.put('/producto/:id', verificarToken, (req, res) => {
             ok: true,
             producto: productodb
         });
-    })
+    });
 
 });
 
@@ -169,7 +169,7 @@ app.delete('/producto/:id', verificarToken, (req, res) => {
             ok: true,
             producto
         });
-    })
+    });
 });
 // ========================================
 //      BUSCAR PRODUCTOS POR NOMBRE
@@ -200,9 +200,9 @@ app.get('/producto/buscar/:termino', verificarToken, (req, res) => {
             res.json({
                 ok: true,
                 productos
-            })
+            });
         });
-})
+});
 
 
 module.exports = app;
