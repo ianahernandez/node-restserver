@@ -14,6 +14,9 @@ const Categoria = require('../models/categoria');
 app.get('/categoria', verificarToken, (req, res) => {
 
     Categoria.find({})
+        .sort('descripcion') //Indica que el orden del listado es por la descripcion
+        .populate('usuario', 'nombre email') //Permite cargar informacion de un object id asociado,
+        // .populate('nombre_coleccion','campos a mostrar')
         .exec((err, categorias) => {
             if (err) {
                 return res.status(500).json({
