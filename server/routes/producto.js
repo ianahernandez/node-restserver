@@ -50,6 +50,8 @@ app.get('/producto/:id', verificarToken, (req, res) => {
     let id = req.params.id;
 
     Producto.findById(id)
+        .populate('categoria', 'descripcion')
+        .populate('usuario', 'nombre email')
         .exec((err, producto) => {
             if (err) {
                 return res.status(500).json({
