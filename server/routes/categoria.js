@@ -78,7 +78,7 @@ app.post('/categoria', [verificarToken, verificarAdminRole], (req, res) => {
             return res.status(400).json({
                 ok: false,
                 err
-            })
+            });
         }
         res.json({
             ok: true,

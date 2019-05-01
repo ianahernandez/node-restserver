@@ -9,5 +9,7 @@ app.use(require('./usuario'));
 app.use(require('./login'));
 //Uso de las rutas definidas para las categorias 
 app.use(require('./categoria'));
+//Uso de las rutas definidas para los productos 
+app.use(require('./producto'));
 
 module.exports = app;
